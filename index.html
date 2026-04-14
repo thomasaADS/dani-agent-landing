@@ -44,26 +44,86 @@
             direction: rtl;
         }
 
-        /* ===== AMBIENT ===== */
+        /* ===== AMBIENT BACKGROUND SYSTEM ===== */
         .ambient-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 20%, rgba(196,30,58,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 80%, rgba(212,175,55,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 50% 50%, rgba(139,0,0,0.03) 0%, transparent 50%);
         }
         .ambient-bg::before {
             content: ''; position: absolute; top: -50%; right: -30%;
-            width: 80vw; height: 80vw;
-            background: radial-gradient(circle, rgba(212,175,55,0.07) 0%, transparent 70%);
-            animation: ambientDrift 20s ease-in-out infinite;
+            width: 90vw; height: 90vw;
+            background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 65%);
+            animation: ambientDrift 18s ease-in-out infinite;
         }
         .ambient-bg::after {
             content: ''; position: absolute; bottom: -30%; left: -20%;
-            width: 60vw; height: 60vw;
-            background: radial-gradient(circle, rgba(196,30,58,0.04) 0%, transparent 70%);
-            animation: ambientDrift 25s ease-in-out infinite reverse;
+            width: 70vw; height: 70vw;
+            background: radial-gradient(circle, rgba(196,30,58,0.06) 0%, transparent 60%);
+            animation: ambientDrift 24s ease-in-out infinite reverse;
         }
         @keyframes ambientDrift {
-            0%,100% { transform: translate(0,0); }
-            50% { transform: translate(5%,-5%); }
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(3%,-4%) scale(1.05); }
+            66% { transform: translate(-2%,3%) scale(0.97); }
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+        .particle:nth-child(1) { left: 10%; width: 2px; height: 2px; animation-duration: 22s; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 25%; width: 3px; height: 3px; animation-duration: 18s; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 40%; width: 2px; height: 2px; animation-duration: 25s; animation-delay: 4s; background: var(--red-bright); }
+        .particle:nth-child(4) { left: 55%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 70%; width: 2px; height: 2px; animation-duration: 28s; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 85%; width: 3px; height: 3px; animation-duration: 23s; animation-delay: 5s; background: var(--red-bright); }
+        .particle:nth-child(7) { left: 15%; width: 2px; height: 2px; animation-duration: 26s; animation-delay: 7s; }
+        .particle:nth-child(8) { left: 50%; width: 3px; height: 3px; animation-duration: 19s; animation-delay: 6s; }
+        .particle:nth-child(9) { left: 65%; width: 2px; height: 2px; animation-duration: 24s; animation-delay: 8s; background: rgba(255,255,255,0.6); }
+        .particle:nth-child(10) { left: 90%; width: 3px; height: 3px; animation-duration: 21s; animation-delay: 2s; }
+        .particle:nth-child(11) { left: 5%; width: 4px; height: 4px; animation-duration: 27s; animation-delay: 9s; }
+        .particle:nth-child(12) { left: 35%; width: 2px; height: 2px; animation-duration: 30s; animation-delay: 4s; background: rgba(255,255,255,0.5); }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            50% { opacity: 0.3; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Section glow accents */
+        .section-glow {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 400px;
+            background: radial-gradient(ellipse, rgba(212,175,55,0.04) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .section-glow.red {
+            background: radial-gradient(ellipse, rgba(196,30,58,0.04) 0%, transparent 70%);
         }
 
         /* ===== STICKY HEADER ===== */
@@ -709,6 +769,21 @@
 </head>
 <body>
     <div class="ambient-bg"></div>
+    <div class="noise-overlay"></div>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
 
     <!-- Sticky Header -->
     <header class="top-bar" id="topBar">
@@ -836,7 +911,8 @@
     </div>
 
     <!-- Trust Showcase - Promo Images -->
-    <section class="section">
+    <section class="section" style="position:relative;">
+        <div class="section-glow red"></div>
         <div class="section-container">
             <div class="divider reveal"></div>
             <h2 class="section-title reveal">שמתם לב שיש <span style="color: var(--red-bright);">המון סוכנים</span> ברשת?</h2>
@@ -895,7 +971,8 @@
     </section>
 
     <!-- Bonus Banner -->
-    <section class="bonus-section reveal">
+    <section class="bonus-section reveal" style="position:relative;">
+        <div class="section-glow"></div>
         <div class="bonus-banner">
             <div class="bonus-amount">100%</div>
             <div class="bonus-text">בונוס על ההפקדה הראשונה</div>
@@ -1008,7 +1085,8 @@
     </section>
 
     <!-- Verified Agent -->
-    <section class="section verified-section">
+    <section class="section verified-section" style="position:relative;">
+        <div class="section-glow"></div>
         <div class="section-container">
             <img src="images/logo.jpg" alt="Dani Verified - WhiteBet Agent" class="verified-logo reveal">
             <h2 class="section-title reveal">סוכן רשמי ומאומת</h2>
